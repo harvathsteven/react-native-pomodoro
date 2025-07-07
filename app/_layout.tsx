@@ -5,6 +5,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { Stack } from 'expo-router';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { TimerProvider } from '../src/context/TimerContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -19,10 +20,12 @@ export default function RootLayout() {
   return (
     <PaperProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-        <StatusBar style="auto" />
+        <TimerProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar style="auto" />
+        </TimerProvider>
       </ThemeProvider>
     </PaperProvider>
   );

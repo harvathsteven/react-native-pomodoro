@@ -1,32 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, Card, IconButton, ProgressBar } from 'react-native-paper';
 import { colors } from '../constants/colors';
 import { spacing, borderRadius, shadows, typography } from '../constants/layout';
+import { useTimer, SESSION_TYPES } from '../context/TimerContext';
+import { formatTime, formatFocusTime } from '../utils/timeUtils';
 
 const TimerScreen = () => {
-  const [time, setTime] = useState(25 * 60); // 25 minutes in seconds
-  const [isRunning, setIsRunning] = useState(false);
-  const [sessionType, setSessionType] = useState('work'); // work, short-break, long-break
+  const {
+    currentSession,
+    timeLeft,
+    totalTime,
+    progress,
+    isRunning,
+    isPaused,
+    isCompleted,
+    completedSessions,
+    startTimer,
+    pauseTimer,
+    resetTimer,
+    skipTimer,
+    setSessionType,
+  } = useTimer();
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
-  const getProgress = () => {
-    const totalTime = 25 * 60; // 25 minutes
-    return (totalTime - time) / totalTime;
-  };
 
   const getSessionColor = () => {
-    switch (sessionType) {
-      case 'work':
+    switch (currentSession) {
+      case SESSION_TYPES.WORK:
         return colors.timerWork;
-      case 'short-break':
+      case SESSION_TYPES.SHORT_BREAK:
         return colors.timerBreak;
-      case 'long-break':
+      case SESSION_TYPES.LONG_BREAK:
         return colors.timerLongBreak;
       default:
         return colors.primary;
@@ -34,40 +39,48 @@ const TimerScreen = () => {
   };
 
   const getSessionLabel = () => {
-    switch (sessionType) {
-      case 'work':
+    switch (currentSession) {
+      case SESSION_TYPES.WORK:
         return 'Focus Session';
-      case 'short-break':
+      case SESSION_TYPES.SHORT_BREAK:
         return 'Short Break';
-      case 'long-break':
+      case SESSION_TYPES.LONG_BREAK:
         return 'Long Break';
       default:
         return 'Work Session';
     }
   };
 
-  const handleStart = () => {
-    setIsRunning(true);
+  const getSessionIcon = () => {
+    switch (currentSession) {
+      case SESSION_TYPES.WORK:
+        return 'briefcase';
+      case SESSION_TYPES.SHORT_BREAK:
+        return 'coffee';
+      case SESSION_TYPES.LONG_BREAK:
+        return 'bed';
+      default:
+        return 'timer';
+    }
   };
 
-  const handlePause = () => {
-    setIsRunning(false);
+  const handleStartPause = () => {
+    if (isRunning) {
+      pauseTimer();
+    } else {
+      startTimer();
+    }
   };
 
   const handleReset = () => {
-    setIsRunning(false);
-    setTime(25 * 60);
+    resetTimer();
   };
 
   const handleSkip = () => {
-    // Cycle through session types
-    const types = ['work', 'short-break', 'long-break'];
-    const currentIndex = types.indexOf(sessionType);
-    const nextIndex = (currentIndex + 1) % types.length;
-    setSessionType(types[nextIndex]);
-    setTime(25 * 60);
-    setIsRunning(false);
+    skipTimer();
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -89,13 +102,16 @@ const TimerScreen = () => {
             
             {/* Timer Display */}
             <View style={styles.timerDisplay}>
-              <Text style={styles.timerText}>{formatTime(time)}</Text>
+              <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
+              {isCompleted && (
+                <Text style={styles.completedText}>Session Complete!</Text>
+              )}
             </View>
             
             {/* Progress Bar */}
             <View style={styles.progressContainer}>
               <ProgressBar
-                progress={getProgress()}
+                progress={progress}
                 color={getSessionColor()}
                 style={styles.progressBar}
               />
@@ -105,23 +121,23 @@ const TimerScreen = () => {
             <View style={styles.sessionControls}>
               <Button
                 mode="outlined"
-                onPress={() => setSessionType('work')}
+                onPress={() => setSessionType(SESSION_TYPES.WORK)}
                 style={[
                   styles.sessionButton,
-                  sessionType === 'work' && styles.sessionButtonActive
+                  currentSession === SESSION_TYPES.WORK && styles.sessionButtonActive
                 ]}
-                textColor={sessionType === 'work' ? colors.surface : colors.textPrimary}
+                textColor={currentSession === SESSION_TYPES.WORK ? colors.surface : colors.textPrimary}
               >
                 Work
               </Button>
               <Button
                 mode="outlined"
-                onPress={() => setSessionType('short-break')}
+                onPress={() => setSessionType(SESSION_TYPES.SHORT_BREAK)}
                 style={[
                   styles.sessionButton,
-                  sessionType === 'short-break' && styles.sessionButtonActive
+                  currentSession === SESSION_TYPES.SHORT_BREAK && styles.sessionButtonActive
                 ]}
-                textColor={sessionType === 'short-break' ? colors.surface : colors.textPrimary}
+                textColor={currentSession === SESSION_TYPES.SHORT_BREAK ? colors.surface : colors.textPrimary}
               >
                 Break
               </Button>
@@ -133,11 +149,12 @@ const TimerScreen = () => {
         <View style={styles.controls}>
           <Button
             mode="contained"
-            onPress={isRunning ? handlePause : handleStart}
+            onPress={handleStartPause}
             style={[styles.controlButton, styles.primaryButton]}
             contentStyle={{ height: 48, justifyContent: 'center' }}
             buttonColor={getSessionColor()}
             textColor={colors.surface}
+            disabled={isCompleted}
           >
             {isRunning ? 'Pause' : 'Start'}
           </Button>
@@ -167,13 +184,13 @@ const TimerScreen = () => {
       <View style={styles.statsContainer}>
         <Card style={styles.statCard}>
           <Card.Content style={styles.statContent}>
-            <Text style={styles.statNumber}>0</Text>
+            <Text style={styles.statNumber}>{completedSessions}</Text>
             <Text style={styles.statLabel}>Sessions Today</Text>
           </Card.Content>
         </Card>
         <Card style={styles.statCard}>
           <Card.Content style={styles.statContent}>
-            <Text style={styles.statNumber}>0h 0m</Text>
+            <Text style={styles.statNumber}>{formatFocusTime(completedSessions)}</Text>
             <Text style={styles.statLabel}>Focus Time</Text>
           </Card.Content>
         </Card>
@@ -236,12 +253,19 @@ const styles = StyleSheet.create({
   },
   timerDisplay: {
     marginBottom: spacing.lg,
+    alignItems: 'center',
   },
   timerText: {
     fontSize: 72,
     fontWeight: 'bold',
     color: colors.textPrimary,
     textAlign: 'center',
+  },
+  completedText: {
+    ...typography.body,
+    color: colors.success,
+    marginTop: spacing.sm,
+    fontWeight: '600',
   },
   progressContainer: {
     width: '100%',
