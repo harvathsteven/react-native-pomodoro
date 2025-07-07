@@ -1,3 +1,28 @@
+# React Native Pomodoro & Task Manager
+
+A productivity app combining task management with a Pomodoro timer, built with Expo, React Native Paper, and Victory Native.
+
+## Features
+- Task management (CRUD, categories, completion, filtering, search)
+- Pomodoro timer (work/break cycles, notifications)
+- Statistics dashboard (charts, streaks)
+- User settings (theme, timer durations, notifications)
+
+## Tech Stack
+- Expo (React Native)
+- React Navigation
+- React Native Paper
+- AsyncStorage
+- Victory Native (charts)
+
+## Setup
+1. Clone the repo: `git clone https://github.com/harvathsteven/react-native-pomodoro.git`
+2. Install dependencies: `npm install`
+3. Start the app: `npx expo start`
+
+## Folder Structure
+See the project plan for detailed structure and implementation timeline.
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
