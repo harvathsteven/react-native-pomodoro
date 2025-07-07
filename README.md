@@ -1,75 +1,65 @@
 # React Native Pomodoro & Task Manager
 
-A productivity app combining task management with a Pomodoro timer, built with Expo, React Native Paper, and Victory Native.
+A modern productivity app combining task management with a Pomodoro timer, built with Expo, React Native Paper, and Victory Native. Features a beautiful UI, statistics dashboard, and user settings.
 
 ## Features
-- Task management (CRUD, categories, completion, filtering, search)
-- Pomodoro timer (work/break cycles, notifications)
-- Statistics dashboard (charts, streaks)
-- User settings (theme, timer durations, notifications)
+- **Task Management:** Create, edit, complete, and organize tasks by category
+- **Pomodoro Timer:** Work/break cycles, session controls, and progress tracking
+- **Statistics Dashboard:** Visualize productivity with charts and quick stats
+- **User Settings:** Theme, timer durations, and notification preferences
 
 ## Tech Stack
-- Expo (React Native)
-- React Navigation
-- React Native Paper
-- AsyncStorage
-- Victory Native (charts)
-
-## Setup
-1. Clone the repo: `git clone https://github.com/harvathsteven/react-native-pomodoro.git`
-2. Install dependencies: `npm install`
-3. Start the app: `npx expo start`
+- [Expo](https://expo.dev) (React Native)
+- [Expo Router](https://expo.github.io/router/docs/)
+- [React Native Paper](https://callstack.github.io/react-native-paper/)
+- [Victory Native](https://formidable.com/open-source/victory/docs/native/) (charts)
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)
 
 ## Folder Structure
-See the project plan for detailed structure and implementation timeline.
+```
+app/                # Expo Router file-based navigation
+  (tabs)/           # Bottom tab screens (Tasks, Timer, Stats, Settings)
+  _layout.tsx       # Root layout with providers
+  index.tsx         # Redirects to main tab
+src/
+  components/       # Reusable UI components
+  constants/        # Design tokens (colors, spacing, etc.)
+  context/          # Context providers (tasks, theme)
+  hooks/            # Custom hooks
+  screens/          # Main screen implementations
+  utils/            # Utility functions
+assets/             # Fonts and images
+```
 
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
-
+## Setup
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/harvathsteven/react-native-pomodoro.git
+   cd react-native-pomodoro
+   ```
+2. **Install dependencies:**
    ```bash
    npm install
    ```
+3. **Start the app:**
+   - For web:
+     ```bash
+     npx expo start --web
+     ```
+   - For mobile (Expo Go or simulator):
+     ```bash
+     npx expo start
+     ```
 
-2. Start the app
+## Screenshots
+<!-- Add screenshots here when available -->
 
-   ```bash
-   npx expo start
-   ```
+## Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-In the output, you'll find options to open the app in a
+## License
+[MIT](LICENSE)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+# Welcome to your Expo app 👋
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This is an [Expo](https://expo.dev) project created with [`
